@@ -1,0 +1,9 @@
+# Ignore built files
+bin/
+build/
+
+# Ignore SDL files, should be provided by the user
+src/external/sdl
+
+# Ignore vscode files
+.vscode/

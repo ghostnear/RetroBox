@@ -1,0 +1,5 @@
+pushd bin
+
+Owari
+
+popd
