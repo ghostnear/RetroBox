@@ -1,24 +1,27 @@
-// SDL stuff
+// Libraries
 #include <SDL.h>
+#include <window.hpp>
 
-// C++ libs
-#include <iostream>
-
-// Show error in message box
-static void show_error(const char *message, SDL_Window *window)
-{
-    if(SDL_ShowSimpleMessageBox(SDL_MESSAGEBOX_ERROR, "Error", message, window) < 0)
-        std::cerr << "{E}: " << message << '\n';
-}
+using namespace Core;
 
 // Main entry point
-int SDL_main(int argc, char* argv[])
+int main(int argc, char* argv[])
 {
     // Init SDL
-    if(SDL_Init(SDL_INIT_EVERYTHING) < 0)
+    int SDL_result = SDL_Init(SDL_INIT_EVERYTHING);
+
+    // Build window
+    Rendering::Window* win = new Rendering::Window();
+    if(SDL_result < 0)
     {
         show_error("Could not init SDL2!", nullptr);
         exit(EXIT_FAILURE);
+    }
+
+    while(!win -> isQuit())
+    {
+        // Poll window events
+        win -> pollEvents();
     }
 
     // Exit
