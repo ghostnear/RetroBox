@@ -21,9 +21,6 @@ int SDL_main(int argc, char* argv[])
         exit(EXIT_FAILURE);
     }
 
-    // Test stuff
-    show_error("Test", nullptr);
-
     // Exit
     SDL_Quit();
     return EXIT_SUCCESS;
