@@ -1,5 +1,5 @@
-#ifndef APP_WINDOW_HPP
-#define APP_WINDOW_HPP
+#ifndef CORE_WINDOW_HPP
+#define CORE_WINDOW_HPP
 
 #include <SDL.h>
 #include <iostream>
@@ -8,7 +8,7 @@ namespace Core
 {
     // Show error window
     // Works even if window is not initialised
-    void show_error(const char *message, SDL_Window* window);
+    void show_error_window(const char *message, SDL_Window* window);
 
     namespace Rendering
     {
@@ -20,8 +20,14 @@ namespace Core
             SDL_Window* winPtr;
 
         public:
-            // Default constructor
+            // Constructor
             Window();
+
+            // Destructor
+            ~Window();
+
+            // Sets the window title
+            void setWindowTitle(std::string name);
 
             // Check if is still running
             bool isQuit();
@@ -30,7 +36,7 @@ namespace Core
             void pollEvents();
 
             // Get SDL_Window instance
-            SDL_Window* getSDLWindow();
+            SDL_Window* getSDL();
         };
     };
 };

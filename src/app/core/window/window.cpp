@@ -2,7 +2,7 @@
 
 namespace Core
 {
-    void show_error(const char *message, SDL_Window* window)
+    void show_error_window(const char *message, SDL_Window* window)
     {
         if(SDL_ShowSimpleMessageBox(SDL_MESSAGEBOX_ERROR, "Error", message, window) < 0)
             std::cerr << "{E}: " << message << '\n';
@@ -17,6 +17,13 @@ namespace Core
             // Assume everything works
             quit = false;
 
+            // Init SDL
+            if(SDL_Init(SDL_INIT_EVERYTHING) < 0)
+            {
+                show_error_window("Could not initialise SDL2!", nullptr);
+                exit(EXIT_FAILURE);
+            }
+
             // Event pointer
             event = new SDL_Event();
 
@@ -25,8 +32,18 @@ namespace Core
                 SDL_WINDOWPOS_CENTERED, 960, 540, SDL_WINDOW_SHOWN);
 
             if(winPtr == nullptr)
-                show_error("Could not create window!", nullptr), quit = true;
+                show_error_window("Could not create window!", nullptr), quit = true;
+        }
 
+        Window::~Window()
+        {
+            SDL_Quit();
+        }
+
+        void Window::setWindowTitle(std::string name)
+        {
+            if(name != "")
+                SDL_SetWindowTitle(winPtr, name.c_str());
         }
 
         void Window::pollEvents()
@@ -40,7 +57,7 @@ namespace Core
                 case SDL_QUIT:
                     quit = true;
                     break;
-                }  
+                }
             }
         }
         
@@ -49,7 +66,7 @@ namespace Core
             return quit;
         }
 
-        SDL_Window* Window::getSDLWindow()
+        SDL_Window* Window::getSDL()
         {
             return winPtr;
         }
