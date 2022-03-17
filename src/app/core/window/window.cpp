@@ -40,6 +40,11 @@ namespace Core
             SDL_Quit();
         }
 
+        void Window::close()
+        {
+            quit = true;
+        }
+
         void Window::setWindowTitle(std::string name)
         {
             if(name != "")

@@ -1,5 +1,6 @@
 // Libraries
 #include <SDL.h>
+#include <iostream>
 #include <core.hpp>
 
 using namespace Core;
@@ -7,17 +8,27 @@ using namespace Core;
 // Main entry point
 int main(int argc, char* argv[])
 {
-    // Build window
-    Rendering::Window* win = new Rendering::Window();
+    // System variables
+    Rendering::Window win;
+    StateManager stateManager(&win);
+    Timer deltaTimer;
 
     // Main app loop
-    while(!win -> isQuit())
+    while(!win.isQuit())
     {
         // Poll window events
-        win -> pollEvents();
+        win.pollEvents();
+
+        // Update the timer
+        deltaTimer.update();
+
+        // Update the app
+        stateManager.update(deltaTimer.getDelta());
+
+        // Draw the app
+        stateManager.draw();
     }
 
     // Exit
-    delete win;
     return EXIT_SUCCESS;
 }

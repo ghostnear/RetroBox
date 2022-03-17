@@ -3,6 +3,7 @@ add_library(
     STATIC
     timer/timer.cpp
     window/window.cpp
+    states/statemanager.cpp
 )
 
 target_include_directories(core PUBLIC header)

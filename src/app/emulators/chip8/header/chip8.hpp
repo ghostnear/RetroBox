@@ -1,0 +1,4 @@
+#ifndef EMULATORS_CHIP8_HPP
+#define EMULATORS_CHIP8_HPP
+
+#endif

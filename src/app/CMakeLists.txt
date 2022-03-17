@@ -10,7 +10,8 @@ if(WIN32)
 endif()
 
 add_subdirectory(core)
+add_subdirectory(emulators)
 
-target_link_libraries(emulator PUBLIC core)
+target_link_libraries(emulator PUBLIC core chip8)
 set_target_properties(emulator PROPERTIES
 	OUTPUT_NAME Owari)

@@ -29,6 +29,9 @@ namespace Core
             // Sets the window title
             void setWindowTitle(std::string name);
 
+            // Force close the window
+            void close();
+
             // Check if is still running
             bool isQuit();
 
