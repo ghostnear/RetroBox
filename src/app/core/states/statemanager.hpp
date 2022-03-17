@@ -1,8 +1,8 @@
 #ifndef CORE_STATEMANAGER_HPP
 #define CORE_STATEMANAGER_HPP
 
-#include "state.hpp"
 #include <queue>
+#include "state.hpp"
 
 namespace Core
 {

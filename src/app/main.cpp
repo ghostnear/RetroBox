@@ -1,7 +1,6 @@
 // Libraries
-#include <SDL.h>
-#include <iostream>
 #include <core.hpp>
+#include <emulators.hpp>
 
 using namespace Core;
 
@@ -12,6 +11,7 @@ int main(int argc, char* argv[])
     Rendering::Window win;
     StateManager stateManager(&win);
     Timer deltaTimer;
+    stateManager.pushState(new Emulators::CHIP8());
 
     // Main app loop
     while(!win.isQuit())
