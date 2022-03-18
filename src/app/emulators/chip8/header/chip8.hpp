@@ -8,7 +8,7 @@ namespace Emulators
     class CHIP8 : public Core::State
     {
     private:
-        double timer = 0;
+
     public:
         void draw() override;
         void update(double dt) override;
