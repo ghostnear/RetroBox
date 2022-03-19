@@ -2,7 +2,11 @@
 #define CORE_WINDOW_HPP
 
 #include <SDL.h>
+#include <imgui.h>
 #include <iostream>
+#include <SDL_opengl.h>
+#include <backends/imgui_impl_sdl.h>
+#include <backends/imgui_impl_opengl3.h>
 
 namespace Core
 {
@@ -18,6 +22,9 @@ namespace Core
             bool quit;
             SDL_Event* event;
             SDL_Window* winPtr;
+            SDL_GLContext gl_context;
+            ImVec4 clear_color = ImVec4(0.0, 0.0, 0.0, 1.00);
+            ImGuiIO io;
 
         public:
             // Constructor
@@ -34,6 +41,12 @@ namespace Core
 
             // Check if is still running
             bool isQuit();
+
+            // Prepare for drawing
+            void drawStart();
+
+            // Finish drawing
+            void drawEnd();
 
             // Poll events
             void pollEvents();

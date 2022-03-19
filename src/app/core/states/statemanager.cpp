@@ -15,6 +15,8 @@ namespace Core
 
     void StateManager::pushState(State* state)
     {
+        state -> setParent(this);
+        state -> init();
         stateQueue.push_back(state);
     }
 

@@ -5,9 +5,15 @@
 
 namespace Core
 {
+    class StateManager;
+
     class State
     {
+    protected:
+        StateManager* parent;
     public:
+        void setParent(StateManager* newParent) { parent = newParent; }
+        virtual void init() = 0;
         virtual void draw() = 0;
         virtual void update(double dt) = 0;
     };

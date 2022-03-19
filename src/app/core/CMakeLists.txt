@@ -7,4 +7,4 @@ add_library(
 )
 
 target_include_directories(core PUBLIC header)
-target_link_libraries(core PUBLIC sdl2)
+target_link_libraries(core PUBLIC imgui)
