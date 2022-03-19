@@ -73,11 +73,10 @@ namespace Emulators
                     for(int i = 0; i < 0x10; i++)
                     {
                         ImGui::TableNextColumn();
-                        ImGui::Text("V[%02d] =  %03d", i, V[i]);
+                        ImGui::Text("V[%01X] =  %03d", i, V[i]);
                     }
-                    ImGui::TableNextColumn();
-                    ImGui::Text("PC =  %04X", PC);
-                    ImGui::Text("I =  %04X", I);
+                    ImGui::TableNextColumn(); ImGui::Text("PC =  %04X", PC);
+                    ImGui::TableNextColumn(); ImGui::Text("I =  %04X", I);
                     ImGui::EndTable();
                 }
             }

@@ -20,10 +20,20 @@ namespace Emulators
             case 0x0000:
                 goto opcode_error;
                 break;
+            
+            // JMP NNN
+            case 0x1000:
+                state -> PC = ONNN(opcode);
+                break;
 
             // LD VX, NN
             case 0x6000:
                 state -> V[OXOO(opcode)] = OONN(opcode);
+                break;
+
+            // ADD VX, NN
+            case 0x7000:
+                state -> V[OXOO(opcode)] += OONN(opcode);
                 break;
 
             // LD I, NNN
