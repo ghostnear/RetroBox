@@ -14,6 +14,7 @@ int main(int argc, char* argv[])
     // Test state
     auto initState = new Emulators::CHIP8();
     stateManager.pushState((State*) initState);
+    initState -> loadROM("./roms/IBM Logo.ch8");
 
     // Main app loop
     while(!win.isQuit())
@@ -29,6 +30,7 @@ int main(int argc, char* argv[])
         stateManager.draw();
         win.drawEnd();
 
+        // Arbitrary value, might need tweaks.
         SDL_Delay(5);
     }
 

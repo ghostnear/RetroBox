@@ -1,6 +1,7 @@
 add_library(
     core
     STATIC
+    utils.cpp
     timer/timer.cpp
     window/window.cpp
     states/statemanager.cpp

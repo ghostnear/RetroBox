@@ -1,6 +1,8 @@
 #ifndef EMULATORS_CHIP8_HPP
 #define EMULATORS_CHIP8_HPP
 
+#include <string>
+#include <fstream>
 #include <core.hpp>
 #include "../cpu/interpreter.hpp"
 
@@ -17,6 +19,7 @@ namespace Emulators
         void init() override;
         void draw() override;
         void update(double dt) override;
+        void loadROM(std::string path);
     };
 };
 

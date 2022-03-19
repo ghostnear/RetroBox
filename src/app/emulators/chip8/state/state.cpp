@@ -6,6 +6,11 @@ namespace Emulators
     {
         CHIP8State::CHIP8State()
         {
+            reset();
+        }
+
+        void CHIP8State::reset()
+        {
             const uint8_t defaultFont[] = {
                 0xF0, 0x90, 0x90, 0x90, 0xF0, // 0
                 0x20, 0x60, 0x20, 0x20, 0x70, // 1
@@ -29,12 +34,8 @@ namespace Emulators
             memset(V, 0, 0x10);
             memset(RAM, 0, 0x1000);
             memcpy(RAM, defaultFont, 5 * 0x10);
-            PC = 0x200;
-        }
-
-        void CHIP8State::reset()
-        {
-
+            PC = mountPoint;
+            I = 0;
         }
 
         void CHIP8State::disableSpec(CHIP8Specs spec)
@@ -76,13 +77,17 @@ namespace Emulators
                     }
                     ImGui::TableNextColumn();
                     ImGui::Text("PC =  %04X", PC);
+                    ImGui::Text("I =  %04X", I);
                     ImGui::EndTable();
                 }
             }
             if(ImGui::CollapsingHeader("Memory"))
             {
-                static MemoryEditor mem_edit;
                 mem_edit.ReadOnly = true;
+                mem_edit.HighlightMin = PC;
+                mem_edit.HighlightMax = PC + 2;
+                mem_edit.HighlightColor = IM_COL32(255, 0, 0, 125);
+                ///TODO: support viewing of the I register in the memory view somehow
                 mem_edit.DrawContents(RAM, 0x1000);
             }
         }
