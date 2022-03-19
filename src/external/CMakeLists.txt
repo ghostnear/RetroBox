@@ -29,6 +29,7 @@ target_include_directories( imgui
 	PUBLIC ${IMGUI_DIR}
 	PUBLIC ${IMGUI_DIR}/backends
 	PUBLIC ${SDL2_DIR}/include
+	PUBLIC ${IMGUI_DIR}/../imgui_memory_editor/imgui_memory_editor/
 	)
 find_package(OpenGL REQUIRED)
 target_link_libraries(imgui PUBLIC sdl2 ${CMAKE_DL_LIBS} ${OPENGL_LIBRARIES})

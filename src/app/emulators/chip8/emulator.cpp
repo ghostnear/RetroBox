@@ -11,9 +11,13 @@ namespace Emulators
 
     void CHIP8::draw()
     {
-        ImGui::Begin("Test");                          // Create a window called "Hello, world!" and append into it.
-        ImGui::Text("Performance %.3f ms/frame (%.1f FPS)", 1000.0f / ImGui::GetIO().Framerate, ImGui::GetIO().Framerate);
-        ImGui::End();
+        if(state -> debugging)
+        {
+            ImGui::Begin("CHIP8 Debugger");
+            ImGui::Text("Performance: %.3f ms/frame (%.1f FPS)", 1000.0f / ImGui::GetIO().Framerate, ImGui::GetIO().Framerate);
+            state -> draw();
+            ImGui::End();
+        }
     }
     
     void CHIP8::update(double dt)

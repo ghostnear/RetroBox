@@ -11,8 +11,7 @@ int main(int argc, char* argv[])
     Rendering::Window win;
     StateManager stateManager(&win);
 
-    // System variables 2
-    Timer deltaTimer;
+    // Test state
     auto initState = new Emulators::CHIP8();
     stateManager.pushState((State*) initState);
 
@@ -23,13 +22,14 @@ int main(int argc, char* argv[])
         win.pollEvents();
 
         // Update the app
-        deltaTimer.update();
-        stateManager.update(deltaTimer.getDelta());
+        stateManager.update(ImGui::GetIO().Framerate);
 
         // Draw the app
         win.drawStart();
         stateManager.draw();
         win.drawEnd();
+
+        SDL_Delay(5);
     }
 
     // Exit
