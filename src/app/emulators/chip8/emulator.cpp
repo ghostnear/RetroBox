@@ -24,6 +24,7 @@ namespace Emulators
                     ImGui::TableNextColumn();
                     ImGui::InputInt("Speed (inst / s)", &state -> speed, 5);
                     if(state -> speed < 1) state -> speed = 1;
+                    if(state -> speed > 10000) state -> speed = 10000;
 
                     if(state -> running)
                     {

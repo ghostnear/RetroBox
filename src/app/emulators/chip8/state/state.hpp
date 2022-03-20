@@ -3,6 +3,7 @@
 
 #include <cstdint>
 #include <imgui.h>
+#include <core.hpp>
 #include <imgui_memory_editor.h>
 
 namespace Emulators
@@ -33,6 +34,13 @@ namespace Emulators
 
             // RAM
             uint8_t RAM[0x1000];
+
+            // VRAM
+            uint8_t *VRAM = nullptr;
+            uint8_t screen_w, screen_h;
+
+            // Stack
+            uint8_t *sp, *stack;
         
             // Debugging variables
             bool debugging = true;

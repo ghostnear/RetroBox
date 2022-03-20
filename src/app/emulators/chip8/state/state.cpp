@@ -31,11 +31,22 @@ namespace Emulators
             };
 
             // Set to the default values
+            stack = new uint8_t[0x10];
+            sp = stack;
             memset(V, 0, 0x10);
+            memset(stack, 0, 0x10);
             memset(RAM, 0, 0x1000);
             memcpy(RAM, defaultFont, 5 * 0x10);
             PC = mountPoint;
             I = 0;
+
+            // Initialise display values
+            screen_w = 64;
+            screen_h = 32;
+            if(VRAM)
+                delete VRAM;
+            VRAM = new uint8_t[screen_w * screen_h];
+            memset(VRAM, 0, screen_h * screen_w);
         }
 
         void CHIP8State::disableSpec(CHIP8Specs spec)
@@ -77,6 +88,34 @@ namespace Emulators
                     }
                     ImGui::TableNextColumn(); ImGui::Text("PC =  %04X", PC);
                     ImGui::TableNextColumn(); ImGui::Text("I =  %04X", I);
+                    ImGui::EndTable();
+                }
+                ImGui::Text("Stack");
+                if(ImGui::BeginTable("stack_table", 8))
+                {
+                    for(int i = 0; i < 0x10 && stack + i < sp; i++)
+                    {
+                        ImGui::TableNextColumn();
+                        ImGui::Text("%s", Core::Utils::convertToHex(stack[i], 3).c_str());
+                    }
+                    ImGui::EndTable();
+                }
+            }
+            if(ImGui::CollapsingHeader("VRAM"))
+            {
+                if(ImGui::BeginTable("vram_table", screen_w))
+                {
+                    for(int i = 0; i < screen_h; i++)
+                    {
+                        for(int j = 0; j < screen_w; j++)
+                        {
+                            ImGui::TableNextColumn();
+                            if(VRAM[i * screen_w + j])
+                                ImGui::Text("*");
+                            else
+                                ImGui::Text(" ");
+                        }
+                    }
                     ImGui::EndTable();
                 }
             }

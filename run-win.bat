@@ -1,5 +1,5 @@
 pushd bin
 
-Owari -e CHIP8 -p "./roms/IBM Logo.ch8"
+Owari -e CHIP8 -p "./roms/test_opcode.ch8"
 
 popd

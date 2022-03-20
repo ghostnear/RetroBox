@@ -20,7 +20,7 @@ namespace Emulators
                 if(executionLog.empty() || executionLog.front() != path)
                 {
                     executionLog.push_front(path);
-                    if(executionLog.size() > 10)
+                    if(executionLog.size() > 30)
                         executionLog.pop_back();
                 }
             }
