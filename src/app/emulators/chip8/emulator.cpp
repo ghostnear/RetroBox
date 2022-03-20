@@ -18,17 +18,29 @@ namespace Emulators
             ImGui::Text("Performance: %.3f ms/frame (%.1f FPS)", 1000.0f / ImGui::GetIO().Framerate, ImGui::GetIO().Framerate);
             if(ImGui::CollapsingHeader("Controls"))
             {
-                if(state -> running)
+                if(ImGui::BeginTable("controls_table", 3))
                 {
-                    if(ImGui::Button("Stop"))
-                        state -> running = false;
-                }
-                else
-                {
-                    if(ImGui::Button("Start"))
-                        state -> running = true;
-                    if(ImGui::Button("Step"))
-                        cpu -> step();        
+                    // Speed controls
+                    ImGui::TableNextColumn();
+                    ImGui::InputInt("Speed (inst / s)", &state -> speed, 5);
+                    if(state -> speed < 1) state -> speed = 1;
+
+                    if(state -> running)
+                    {
+                        ImGui::TableNextColumn();
+                        if(ImGui::Button("Stop"))
+                            state -> running = false;
+                    }
+                    else
+                    {
+                        ImGui::TableNextColumn();
+                        if(ImGui::Button("Start"))
+                            state -> running = true;
+                        ImGui::TableNextColumn();
+                        if(ImGui::Button("Step"))
+                            cpu -> step();        
+                    }
+                    ImGui::EndTable();
                 }
             }
             cpu -> printLog();

@@ -10,6 +10,8 @@ namespace Emulators
     {
         class CHIP8Interpreter : public CHIP8CPU
         {
+        private:
+            double timer = 0;
         public:
             void step() override;
             void update(double dt) override;

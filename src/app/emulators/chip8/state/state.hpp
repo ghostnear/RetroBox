@@ -26,6 +26,7 @@ namespace Emulators
             // Registers
             uint8_t V[0x10];
             uint16_t PC, I;
+            int32_t speed = 500;
 
             // Mount point
             uint16_t mountPoint = 0x200;

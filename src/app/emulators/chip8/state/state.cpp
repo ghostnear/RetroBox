@@ -68,7 +68,7 @@ namespace Emulators
             }
             if(ImGui::CollapsingHeader("Registers"))
             {
-                if(ImGui::BeginTable("registers_table", 8))
+                if(ImGui::BeginTable("registers_table", 4))
                 {
                     for(int i = 0; i < 0x10; i++)
                     {
@@ -86,7 +86,7 @@ namespace Emulators
                 mem_edit.HighlightMin = PC;
                 mem_edit.HighlightMax = PC + 2;
                 mem_edit.HighlightColor = IM_COL32(255, 0, 0, 125);
-                ///TODO: support viewing of the I register in the memory view somehow
+                ///TODO: support viewing of the I register in the memory view somehow, would be nice
                 mem_edit.DrawContents(RAM, 0x1000);
             }
         }

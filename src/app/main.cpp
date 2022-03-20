@@ -37,7 +37,7 @@ int main(int argc, char* argv[])
             win.pollEvents();
 
             // Update the app
-            stateManager.update(ImGui::GetIO().Framerate);
+            stateManager.update(ImGui::GetIO().DeltaTime);
 
             // Draw the app
             win.drawStart();
@@ -45,7 +45,7 @@ int main(int argc, char* argv[])
             win.drawEnd();
 
             // Arbitrary value, might need tweaks.
-            SDL_Delay(5);
+            SDL_Delay(6);
         }
     }
 

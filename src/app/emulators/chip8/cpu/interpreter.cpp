@@ -54,7 +54,13 @@ namespace Emulators
 
         void CHIP8Interpreter::update(double dt)
         {
-
+            if(state -> running)
+            {
+                timer += dt;
+                while(timer >= 1.0 / state -> speed)
+                    step(), timer -= 1.0 / state -> speed;
+            }
+            else timer = 0;
         }
     };
 }
