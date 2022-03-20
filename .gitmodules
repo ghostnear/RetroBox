@@ -7,3 +7,6 @@
 [submodule "src/external/imgui_memory_editor"]
 	path = src/external/imgui_memory_editor
 	url = https://github.com/ocornut/imgui_club.git
+[submodule "src/external/argparse"]
+	path = src/external/argparse
+	url = https://github.com/cofyc/argparse.git

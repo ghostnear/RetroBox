@@ -1,3 +1,6 @@
+// General app data
+#include "appdata.hpp"
+
 // Libraries
 #include <core.hpp>
 #include <emulators.hpp>
@@ -7,31 +10,43 @@ using namespace Core;
 // Main entry point
 int main(int argc, char* argv[])
 {
-    // System variables
-    Rendering::Window win;
-    StateManager stateManager(&win);
+    // Argument parsing
+    ArgParser args(argc, argv);
 
-    // Test state
-    auto initState = new Emulators::CHIP8();
-    stateManager.pushState((State*) initState);
-    initState -> loadROM("./roms/test_opcode.ch8");
-
-    // Main app loop
-    while(!win.isQuit())
+    // Check main app modes
+    if(args.getVersionMode())
+        printf("%s\n", OWARI_VERSION.c_str());
+    else if(!args.getHelpMode())
     {
-        // Poll app events
-        win.pollEvents();
+        // System variables
+        Rendering::Window win;
+        StateManager stateManager(&win);
 
-        // Update the app
-        stateManager.update(ImGui::GetIO().Framerate);
+        // CHIP8 mode
+        if(args.getEmu() == "CHIP8")
+        {
+            auto initState = new Emulators::CHIP8();
+            stateManager.pushState((State*) initState);
+            initState -> loadROM(args.getPath());
+        }
 
-        // Draw the app
-        win.drawStart();
-        stateManager.draw();
-        win.drawEnd();
+        // Main app loop
+        while(!win.isQuit())
+        {
+            // Poll app events
+            win.pollEvents();
 
-        // Arbitrary value, might need tweaks.
-        SDL_Delay(5);
+            // Update the app
+            stateManager.update(ImGui::GetIO().Framerate);
+
+            // Draw the app
+            win.drawStart();
+            stateManager.draw();
+            win.drawEnd();
+
+            // Arbitrary value, might need tweaks.
+            SDL_Delay(5);
+        }
     }
 
     // Exit

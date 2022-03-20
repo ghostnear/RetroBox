@@ -5,9 +5,10 @@ set(CMAKE_CXX_EXTENSIONS OFF)
 add_executable(emulator
 main.cpp)
 
-if(WIN32)
-	set_property(TARGET emulator PROPERTY WIN32_EXECUTABLE TRUE)
-endif()
+# Uncomment this if you don't want console output with the program
+# if(WIN32)
+	# set_property(TARGET emulator PROPERTY WIN32_EXECUTABLE TRUE)
+# endif()
 
 add_subdirectory(core)
 add_subdirectory(emulators)

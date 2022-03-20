@@ -33,3 +33,7 @@ target_include_directories( imgui
 	)
 find_package(OpenGL REQUIRED)
 target_link_libraries(imgui PUBLIC sdl2 ${CMAKE_DL_LIBS} ${OPENGL_LIBRARIES})
+
+#=================== ARGPARSE =================== #
+add_library(argparse STATIC argparse/argparse.c)
+target_include_directories(argparse PUBLIC argparse)
