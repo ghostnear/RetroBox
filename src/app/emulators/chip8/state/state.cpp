@@ -31,7 +31,9 @@ namespace Emulators
             };
 
             // Set to the default values
-            stack = new uint8_t[0x10];
+            if(stack)
+                delete stack;
+            stack = new uint16_t[0x10];
             sp = stack;
             memset(V, 0, 0x10);
             memset(stack, 0, 0x10);
@@ -39,6 +41,7 @@ namespace Emulators
             memcpy(RAM, defaultFont, 5 * 0x10);
             PC = mountPoint;
             I = 0;
+            sound_timer = delta_timer = 0;
 
             // Initialise display values
             screen_w = 64;

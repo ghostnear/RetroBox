@@ -25,7 +25,7 @@ namespace Emulators
 
         public:
             // Registers
-            uint8_t V[0x10];
+            uint8_t V[0x10], delta_timer, sound_timer;
             uint16_t PC, I;
             int32_t speed = 500;
 
@@ -40,7 +40,7 @@ namespace Emulators
             uint8_t screen_w, screen_h;
 
             // Stack
-            uint8_t *sp, *stack;
+            uint16_t *sp, *stack = nullptr;
         
             // Debugging variables
             bool debugging = true;

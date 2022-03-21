@@ -8,6 +8,7 @@ namespace Emulators
         state = new CHIP8State();
         cpu = new CHIP8Interpreter();
         cpu -> attachState(state);
+        srand(time(NULL));
     }
 
     void CHIP8::draw()
