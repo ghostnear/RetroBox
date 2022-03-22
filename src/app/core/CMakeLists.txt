@@ -1,11 +1,12 @@
 add_library(
-    core
-    STATIC
-    utils.cpp
-    timer/timer.cpp
-    window/window.cpp
-    states/statemanager.cpp
-    argparser/argparser.cpp
+  core
+  STATIC
+  utils.cpp
+  timer/timer.cpp
+  input/input.cpp
+  window/window.cpp
+  states/statemanager.cpp
+  argparser/argparser.cpp
 )
 
 target_include_directories(core PUBLIC header)

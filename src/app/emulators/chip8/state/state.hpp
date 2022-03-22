@@ -26,6 +26,8 @@ namespace Emulators
         public:
             // Registers
             uint8_t V[0x10], delta_timer, sound_timer;
+            uint8_t keys[0x10];
+            char keyBind[0x10] = { 'x', '1', '2', '3', 'q', 'w', 'e', 'a', 's', 'd', 'z', 'c', '4', 'r', 'f', 'v'};
             uint16_t PC, I;
             int32_t speed = 500;
 

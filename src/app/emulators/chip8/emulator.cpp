@@ -83,6 +83,12 @@ namespace Emulators
     
     void CHIP8::update(double dt)
     {
+        // Update the input
+        Core::Input* input = parent -> getWindow() -> getInput();
+        for(int i = 0; i < 0x10; i++)
+            state -> keys[i] = input -> getKey(state -> keyBind[i]);
+
+        // Update the CPU
         cpu -> update(dt);
     }
 };

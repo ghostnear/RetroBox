@@ -109,8 +109,17 @@ namespace Core
                 case SDL_QUIT:
                     quit = true;
                     break;
+                // Probably an input event
+                default:
+                    inputHandler.process_event(event);
+                    break;
                 }
             }
+        }
+
+        Core::Input* Window::getInput()
+        {
+            return &inputHandler;
         }
 
         void Window::drawStart()

@@ -174,6 +174,7 @@ namespace Emulators
 
             // DRW VX, VY, N
             case 0xD:
+                VF = 0;
                 for(auto i = 0; i < OOON; i++)
                 {
                     for(auto j = 0; j < 8; j++)
@@ -190,6 +191,26 @@ namespace Emulators
                     }
                 }
                 break;
+            
+            // Input handling
+            case 0xE:
+                switch(OONN)
+                {
+                // SKP VX
+                case 0x9E:
+                    VPC += 2 * (state -> keys[VX]);
+                    break;
+
+                // SKNP VX
+                case 0xA1:
+                    VPC += 2 * (!state -> keys[VX]);
+                    break;
+
+                default:
+                    goto opcode_unknown;
+                    break;
+                }
+                break;
 
             // Special ops
             case 0xF:
@@ -203,6 +224,11 @@ namespace Emulators
                 // LD DT, VX
                 case 0x15:
                     state -> delta_timer = VX;
+                    break;
+
+                // LD ST, VX
+                case 0x18:
+                    state -> sound_timer = VX;
                     break;
 
                 // ADD I, VX

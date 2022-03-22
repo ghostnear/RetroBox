@@ -39,6 +39,7 @@ namespace Emulators
             memset(stack, 0, 0x10);
             memset(RAM, 0, 0x1000);
             memcpy(RAM, defaultFont, 5 * 0x10);
+            memset(keys, 0, 0x10);
             PC = mountPoint;
             I = 0;
             sound_timer = delta_timer = 0;
@@ -91,16 +92,6 @@ namespace Emulators
                     }
                     ImGui::TableNextColumn(); ImGui::Text("PC =  %04X", PC);
                     ImGui::TableNextColumn(); ImGui::Text("I =  %04X", I);
-                    ImGui::EndTable();
-                }
-                ImGui::Text("Stack");
-                if(ImGui::BeginTable("stack_table", 8))
-                {
-                    for(int i = 0; i < 0x10 && stack + i < sp; i++)
-                    {
-                        ImGui::TableNextColumn();
-                        ImGui::Text("%s", Core::Utils::convertToHex(stack[i], 3).c_str());
-                    }
                     ImGui::EndTable();
                 }
             }

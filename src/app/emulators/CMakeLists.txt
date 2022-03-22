@@ -1,7 +1,7 @@
 add_library(
-    emulators
-    STATIC
-    headers/emulators.hpp
+  emulators
+  STATIC
+  headers/emulators.hpp
 )
 
 add_subdirectory(chip8)
