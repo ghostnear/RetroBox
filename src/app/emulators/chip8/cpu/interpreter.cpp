@@ -7,6 +7,7 @@
 #define ONNN  (opcode & 0x0FFF)
 #define NOOO ((opcode & 0xF000) >> 12)
 #define  VF  (state -> V[0x0F])
+#define  VO  (state -> V[0x00])
 #define  VY  (state -> V[OONO])
 #define  VX  (state -> V[ONOO])
 #define  VPC (state -> PC)
@@ -48,7 +49,16 @@ namespace Emulators
             
             // JMP NNN
             case 0x1:
-                VPC = ONNN;
+                if(opcode == 0x1260)
+                {
+                    // HiRes mode
+                    state -> screen_h = 64;
+                    state -> screen_w = 64;
+                    state -> VRAM = new uint8_t[64 * 64];
+                    memset(state -> VRAM, 0, state -> screen_h * state -> screen_w);
+                }
+                else
+                    VPC = ONNN;
                 break;
 
             // CALL NNN
@@ -165,6 +175,11 @@ namespace Emulators
             // LD I, NNN
             case 0xA:
                 VI = ONNN;
+                break;
+
+            // JMP V0, NNN
+            case 0xB:
+                VPC = ONNN + VO;
                 break;
 
             // RND VX, NN

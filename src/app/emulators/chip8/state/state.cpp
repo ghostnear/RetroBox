@@ -85,31 +85,13 @@ namespace Emulators
             {
                 if(ImGui::BeginTable("registers_table", 4))
                 {
-                    for(int i = 0; i < 0x10; i++)
+                    for(auto i = 0; i < 0x10; i++)
                     {
                         ImGui::TableNextColumn();
                         ImGui::Text("V[%01X] =  %03d", i, V[i]);
                     }
                     ImGui::TableNextColumn(); ImGui::Text("PC =  %04X", PC);
                     ImGui::TableNextColumn(); ImGui::Text("I =  %04X", I);
-                    ImGui::EndTable();
-                }
-            }
-            if(ImGui::CollapsingHeader("VRAM"))
-            {
-                if(ImGui::BeginTable("vram_table", screen_w))
-                {
-                    for(int i = 0; i < screen_h; i++)
-                    {
-                        for(int j = 0; j < screen_w; j++)
-                        {
-                            ImGui::TableNextColumn();
-                            if(VRAM[i * screen_w + j])
-                                ImGui::Text("*");
-                            else
-                                ImGui::Text(" ");
-                        }
-                    }
                     ImGui::EndTable();
                 }
             }

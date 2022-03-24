@@ -15,8 +15,24 @@ namespace Core
         }
     }
 
+    void Input::update()
+    {
+        for(auto i : keyStatus)
+            lastKeyStatus[i.first] = i.second;
+    }
+
     bool Input::getKey(char key)
     {
         return keyStatus[key];
+    }
+
+    bool Input::getKeyPressed(char key)
+    {
+        return keyStatus[key] && keyStatus[key] != lastKeyStatus[key];
+    }
+
+    bool Input::getKeyReleased(char key)
+    {
+        return !keyStatus[key] && keyStatus[key] != lastKeyStatus[key];
     }
 };

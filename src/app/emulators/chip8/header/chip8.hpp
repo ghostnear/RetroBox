@@ -15,6 +15,10 @@ namespace Emulators
     private:
         CHIP8State* state;
         CHIP8CPU* cpu;
+
+        // Output handling
+        uint32_t lscreen_w = 0, lscreen_h = 0;
+        SDL_Texture* tex = nullptr;
     public:
         void init() override;
         void draw() override;

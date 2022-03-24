@@ -1,5 +1,5 @@
 pushd bin
 
-Owari -e CHIP8 -p "./roms/games/Tetris [Fran Dachille, 1991].ch8"
+Owari -e CHIP8 -p "./roms/games/Pong (1 player).ch8"
 
 popd

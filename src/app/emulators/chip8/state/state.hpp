@@ -45,8 +45,9 @@ namespace Emulators
             uint16_t *sp, *stack = nullptr;
         
             // Debugging variables
-            bool debugging = true;
+            bool debugging = false;
             bool ignoreErrors = true;
+            char debugBind = 'p';
             MemoryEditor mem_edit;
 
             // If the emulator is running

@@ -4,10 +4,10 @@
 #include <SDL.h>
 #include <imgui.h>
 #include <iostream>
-#include <SDL_opengl.h>
-#include <../input/input.hpp>
+#include "../input/input.hpp"
+#include "renderer/renderer.hpp"
 #include <backends/imgui_impl_sdl.h>
-#include <backends/imgui_impl_opengl3.h>
+#include <backends/imgui_impl_sdlrenderer.h>
 
 namespace Core
 {
@@ -17,14 +17,16 @@ namespace Core
 
     namespace Rendering
     {
+        class Renderer;
+
         class Window
         {
         private:
             bool quit;
             SDL_Event* event;
             SDL_Window* winPtr;
+            Renderer* renderer;
             Core::Input inputHandler;
-            SDL_GLContext gl_context;
             ImVec4 clear_color = ImVec4(0.0, 0.0, 0.0, 1.00);
             ImGuiIO io;
 
@@ -55,6 +57,9 @@ namespace Core
 
             // Poll events
             void pollEvents();
+
+            // Get the renderer
+            Renderer* getRenderer();
 
             // Get SDL_Window instance
             SDL_Window* getSDL();

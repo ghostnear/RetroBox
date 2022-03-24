@@ -7,6 +7,7 @@ add_library(
   window/window.cpp
   states/statemanager.cpp
   argparser/argparser.cpp
+  window/renderer/renderer.cpp
 )
 
 target_include_directories(core PUBLIC header)

@@ -13,6 +13,45 @@ namespace Emulators
 
     void CHIP8::draw()
     {
+        // Get the renderer
+        SDL_Renderer* ren = parent -> getWindow() -> getRenderer() -> getSDL();
+
+        ///TODO: fix this mess
+
+        // Check display if it needs updates
+        if(lscreen_w != state -> screen_w || lscreen_h != state -> screen_h)
+        {
+            lscreen_w = state -> screen_w;
+            lscreen_h = state -> screen_h;
+            if(tex)
+                SDL_DestroyTexture(tex);
+            tex = SDL_CreateTexture(ren, SDL_PIXELFORMAT_RGBA8888, SDL_TEXTUREACCESS_TARGET, lscreen_w, lscreen_h);
+        }
+
+        // Draw the screen to the texture
+        SDL_SetRenderTarget(ren, tex);
+        for(auto i = 0; i < lscreen_w; i++)
+            for(auto j = 0; j < lscreen_h; j++)
+            {
+                if(state -> VRAM[i + j * lscreen_w])
+                    SDL_SetRenderDrawColor(ren, 255, 255, 255, 255);
+                else
+                    SDL_SetRenderDrawColor(ren, 0, 0, 0, 255);
+                SDL_RenderDrawPoint(ren, i, j);
+            }
+
+        // Draw texture to the screen
+        SDL_Rect r;
+        int minFit = std::min(ImGui::GetIO().DisplaySize.x / lscreen_w, ImGui::GetIO().DisplaySize.y / lscreen_h);
+        r.w = lscreen_w * minFit;
+        r.h = lscreen_h * minFit;
+        r.x = (ImGui::GetIO().DisplaySize.x - r.w) / 2;
+        r.y = (ImGui::GetIO().DisplaySize.y - r.h) / 2;
+        SDL_SetRenderDrawColor(ren, 16, 16, 16, 255);
+        SDL_SetRenderTarget(ren, NULL);
+        SDL_RenderCopy(ren, tex, NULL, &r);
+
+        // If debugging is enabled
         if(state -> debugging)
         {
             ImGui::Begin("CHIP8 Debugger");
@@ -85,8 +124,12 @@ namespace Emulators
     {
         // Update the input
         Core::Input* input = parent -> getWindow() -> getInput();
-        for(int i = 0; i < 0x10; i++)
+        for(auto i = 0; i < 0x10; i++)
             state -> keys[i] = input -> getKey(state -> keyBind[i]);
+
+        // Check for debug key press
+        if(input -> getKeyPressed(state -> debugBind))
+            state -> debugging = !state -> debugging;
 
         // Update the CPU
         cpu -> update(dt);
