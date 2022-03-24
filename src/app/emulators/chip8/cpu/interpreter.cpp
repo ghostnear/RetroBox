@@ -197,11 +197,15 @@ namespace Emulators
                         // Check if bit is set in sprite
                         if(state -> RAM[VI + i] & (1 << (7 - j)))
                         {
+                            // Pixel pos
+                            uint32_t pos = (VY + i) * state -> screen_w + VX + j;
+                            pos %= state -> screen_w * state -> screen_h;
+
                             // Collision flag
-                            VF = ((state -> VRAM[(VY + i) * state -> screen_w + VX + j] == 1) ? 1 : VF);
+                            VF = ((state -> VRAM[pos] == 1) ? 1 : VF);
 
                             // XOR the pixel
-                            state -> VRAM[(VY + i) * state -> screen_w + VX + j] ^= 1;
+                            state -> VRAM[pos] ^= 1;
                         }
                     }
                 }
@@ -234,6 +238,15 @@ namespace Emulators
                 // LD VX, DT
                 case 0x07:
                     VX = state -> delta_timer;
+                    break;
+
+                // LD VX, KEY
+                case 0x0A:
+                    VX = 0x10;
+                    for(auto i = 0; i < 0x10 && VX == 0x10; i++)
+                        if(state -> keys[i])
+                            VX = i;
+                    VPC -= 2 * (VX == 0x10);
                     break;
 
                 // LD DT, VX

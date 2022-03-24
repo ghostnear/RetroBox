@@ -25,20 +25,23 @@ namespace Emulators
             lscreen_h = state -> screen_h;
             if(tex)
                 SDL_DestroyTexture(tex);
-            tex = SDL_CreateTexture(ren, SDL_PIXELFORMAT_RGBA8888, SDL_TEXTUREACCESS_TARGET, lscreen_w, lscreen_h);
+            tex = SDL_CreateTexture(ren, SDL_PIXELFORMAT_RGBA8888, SDL_TEXTUREACCESS_STREAMING, lscreen_w, lscreen_h);
         }
 
         // Draw the screen to the texture
-        SDL_SetRenderTarget(ren, tex);
+        void* mPixels;
+        int mPitch;
+        SDL_LockTexture(tex, NULL, &mPixels, &mPitch);
+        Uint32 *pixeldata = (Uint32 *)mPixels;
         for(auto i = 0; i < lscreen_w; i++)
             for(auto j = 0; j < lscreen_h; j++)
             {
                 if(state -> VRAM[i + j * lscreen_w])
-                    SDL_SetRenderDrawColor(ren, 255, 255, 255, 255);
+                    pixeldata[i + j * lscreen_w] = 0xFFFFFFFF;
                 else
-                    SDL_SetRenderDrawColor(ren, 0, 0, 0, 255);
-                SDL_RenderDrawPoint(ren, i, j);
+                    pixeldata[i + j * lscreen_w] = 0x000000FF;
             }
+        SDL_UnlockTexture(tex);
 
         // Draw texture to the screen
         SDL_Rect r;
