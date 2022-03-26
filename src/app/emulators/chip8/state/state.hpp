@@ -30,6 +30,7 @@ namespace Emulators
             char keyBind[0x10] = { 'x', '1', '2', '3', 'q', 'w', 'e', 'a', 's', 'd', 'z', 'c', '4', 'r', 'f', 'v'};
             uint16_t PC, I;
             int32_t speed = 500;
+            bool supermode = false;
 
             // Mount point
             uint16_t mountPoint = 0x200;
@@ -51,7 +52,7 @@ namespace Emulators
             MemoryEditor mem_edit;
 
             // If the emulator is running
-            bool running = false;
+            bool running = true;
 
             // Constructor
             CHIP8State();

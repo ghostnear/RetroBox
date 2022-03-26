@@ -13,6 +13,17 @@
 #define  VPC (state -> PC)
 #define  VI  (state -> I)
 
+#define clean() \
+    memset(state -> VRAM, 0, state -> screen_h * state -> screen_w);
+
+#define resize(newX, newY) \
+    state -> screen_w = newX; \
+    state -> screen_h = newY; \
+    if(state -> VRAM) \
+        delete state -> VRAM; \
+    state -> VRAM = new uint8_t[newX * newY]; \
+    clean();
+
 namespace Emulators
 {
     namespace Components
@@ -28,37 +39,76 @@ namespace Emulators
             {
             // System ops
             case 0x0:
-                switch(OONN)
-                {
-                // CLS
-                case 0xE0:
+                // Clean hires
+                if(opcode == 0x0230)
                     memset(state -> VRAM, 0, state -> screen_h * state -> screen_w);
-                    break;
+                else
+                {
+                    switch(OONN)
+                    {
+                    // CLS
+                    case 0xE0:  clean();  break;
 
-                // RET
-                case 0xEE:
-                    state -> sp--;
-                    VPC = *state -> sp;
-                    break;
+                    // RET
+                    case 0xEE:
+                        state -> sp--;
+                        VPC = *state -> sp;
+                        break;
 
-                default:
-                    goto opcode_unknown;
-                    break;
+                    /// SCR
+                    case 0xFB:
+                        for(auto i = 0; i < state -> screen_h; i++)
+                        {
+                            memmove(
+                                state -> VRAM + i * state -> screen_w + 4,
+                                state -> VRAM + i * state -> screen_w,
+                                state -> screen_w - 4);
+                            memset(state -> VRAM + i * state -> screen_w, 0, 4);
+                        }
+                        break;
+
+                    /// SCL
+                    case 0xFC:
+                        for(auto i = 0; i < state -> screen_h; i++)
+                        {
+                            memmove(
+                                state -> VRAM + i * state -> screen_w,
+                                state -> VRAM + i * state -> screen_w + 4,
+                                state -> screen_w - 4);
+                            memset(state -> VRAM + (i + 1) * state -> screen_w - 4, 0, 4);
+                        }
+                        break;
+
+                    // HIGH
+                    case 0xFF:
+                        resize(128, 64);
+                        break;
+
+                    default:
+                        switch(OONO)
+                        {
+                        // SCD N
+                        case 0xC:
+                            memmove(
+                                state -> VRAM + OOON * state -> screen_w,
+                                state -> VRAM,
+                                state -> screen_w * (state -> screen_h - OOON));
+                            memset(state -> VRAM, 0, OOON * state -> screen_w);
+                            break;
+                        default:
+                            goto opcode_unknown;
+                            break;
+                        }
+                        break;
+                    }
                 }
                 break;
             
             // JMP NNN
             case 0x1:
-                if(opcode == 0x1260)
-                {
-                    // HiRes mode
-                    state -> screen_h = 64;
-                    state -> screen_w = 64;
-                    state -> VRAM = new uint8_t[64 * 64];
-                    memset(state -> VRAM, 0, state -> screen_h * state -> screen_w);
-                }
-                else
-                    VPC = ONNN;
+                // Init hires
+                if(opcode == 0x1260) { resize(64, 64); }
+                else    VPC = ONNN;
                 break;
 
             // CALL NNN
@@ -145,6 +195,12 @@ namespace Emulators
                     VX >>= 1;
                     break;
 
+                // SUBN VX, VY
+                case 0x7:
+                    VF = VX > VY;
+                    VX = VY - VX;
+                    break;
+
                 // SHL VX, VY
                 case 0xE:
                     VF = ((VX & (1 << 8)) != 0);
@@ -190,25 +246,51 @@ namespace Emulators
             // DRW VX, VY, N
             case 0xD:
                 VF = 0;
-                for(auto i = 0; i < OOON; i++)
+                if(OOON != 0)
                 {
-                    for(auto j = 0; j < 8; j++)
+                    for(auto i = 0; i < OOON; i++)
                     {
-                        // Check if bit is set in sprite
-                        if(state -> RAM[VI + i] & (1 << (7 - j)))
+                        for(auto j = 0; j < 8; j++)
                         {
-                            // Pixel pos
-                            uint32_t pos = (VY + i) * state -> screen_w + VX + j;
-                            pos %= state -> screen_w * state -> screen_h;
+                            // Check if bit is set in sprite
+                            if(state -> RAM[VI + i] & (1 << (7 - j)))
+                            {
+                                // Pixel pos
+                                uint32_t pos = (VY + i) * state -> screen_w + VX + j;
+                                pos %= state -> screen_w * state -> screen_h;
 
-                            // Collision flag
-                            VF = ((state -> VRAM[pos] == 1) ? 1 : VF);
+                                // Collision flag
+                                VF = ((state -> VRAM[pos] == 1) ? 1 : VF);
 
-                            // XOR the pixel
-                            state -> VRAM[pos] ^= 1;
+                                // XOR the pixel
+                                state -> VRAM[pos] ^= 1;
+                            }
                         }
                     }
                 }
+                else
+                {
+                    for(auto i = 0; i < 0x10; i++)
+                    {
+                        for(auto j = 0; j < 0x10; j++)
+                        {
+                            // Check if bit is set in sprite
+                            if((j < 8 && state -> RAM[VI + 2 * i] & (1 << (7 - j))) || (j >= 8 && state -> RAM[VI + 2 * i + 1] & (1 << (0xF - j))))
+                            {
+                                // Pixel pos
+                                uint32_t pos = (VY + i) * state -> screen_w + VX + j;
+                                pos %= state -> screen_w * state -> screen_h;
+
+                                // Collision flag
+                                VF = ((state -> VRAM[pos] == 1) ? 1 : VF);
+
+                                // XOR the pixel
+                                state -> VRAM[pos] ^= 1;
+                            }
+                        }
+                    }
+                }
+                
                 break;
             
             // Input handling
@@ -268,6 +350,11 @@ namespace Emulators
                 // LD I, FONT(VX)
                 case 0x29:
                     VI = VX * 5;
+                    break;
+                
+                // LD I, SFONT(VX)
+                case 0x30:
+                    VI = 5 * 0x10 + VX * 10;
                     break;
 
                 // BCD VX
