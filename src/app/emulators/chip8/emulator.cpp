@@ -1,5 +1,8 @@
 #include "header/chip8.hpp"
 
+#define min_fit \
+    (std::min(ImGui::GetIO().DisplaySize.x / lscreen_w, ImGui::GetIO().DisplaySize.y / lscreen_h))
+
 namespace Emulators
 {
     void CHIP8::init()
@@ -29,25 +32,28 @@ namespace Emulators
         }
 
         // Draw the screen to the texture
-        void* mPixels;
-        int mPitch;
-        SDL_LockTexture(tex, NULL, &mPixels, &mPitch);
-        Uint32 *pixeldata = (Uint32 *)mPixels;
-        for(auto i = 0; i < lscreen_w; i++)
-            for(auto j = 0; j < lscreen_h; j++)
-            {
-                if(state -> VRAM[i + j * lscreen_w])
-                    pixeldata[i + j * lscreen_w] = 0xFFFFFFFF;
-                else
-                    pixeldata[i + j * lscreen_w] = 0x000000FF;
-            }
-        SDL_UnlockTexture(tex);
+        if(state -> draw_flag)
+        {
+            void* mPixels;
+            int mPitch;
+            SDL_LockTexture(tex, NULL, &mPixels, &mPitch);
+            Uint32 *pixeldata = (Uint32 *)mPixels;
+            for(auto i = 0; i < lscreen_w; i++)
+                for(auto j = 0; j < lscreen_h; j++)
+                {
+                    if(state -> VRAM[i + j * lscreen_w])
+                        pixeldata[i + j * lscreen_w] = 0xFFFFFFFF;
+                    else
+                        pixeldata[i + j * lscreen_w] = 0x000000FF;
+                }
+            SDL_UnlockTexture(tex);
+            state -> draw_flag = false;
+        }
 
         // Draw texture to the screen
         SDL_Rect r;
-        int minFit = std::min(ImGui::GetIO().DisplaySize.x / lscreen_w, ImGui::GetIO().DisplaySize.y / lscreen_h);
-        r.w = lscreen_w * minFit;
-        r.h = lscreen_h * minFit;
+        r.w = lscreen_w * min_fit;
+        r.h = lscreen_h * min_fit;
         r.x = (ImGui::GetIO().DisplaySize.x - r.w) / 2;
         r.y = (ImGui::GetIO().DisplaySize.y - r.h) / 2;
         SDL_SetRenderDrawColor(ren, 16, 16, 16, 255);

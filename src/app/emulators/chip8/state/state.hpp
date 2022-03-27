@@ -31,7 +31,7 @@ namespace Emulators
             char keyBind[0x10] = { 'x', '1', '2', '3', 'q', 'w', 'e', 'a', 's', 'd', 'z', 'c', '4', 'r', 'f', 'v'};
             uint16_t PC, I;
             int32_t speed = 500;
-            bool supermode = false;
+            bool supermode = false, draw_flag = false;
 
             // Mount point
             uint16_t mountPoint = 0x200;

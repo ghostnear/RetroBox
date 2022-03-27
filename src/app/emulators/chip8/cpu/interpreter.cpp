@@ -250,6 +250,7 @@ namespace Emulators
             // DRW VX, VY, N
             case 0xD:
                 VF = 0;
+                state -> draw_flag = true;
                 for(auto i = 0; i < ((OOON != 0) ? OOON : 0x10); i++)
                     for(auto j = 0; j < ((OOON != 0) ? 0x8 : 0x10); j++)
                         // Check if bit is set in sprite
@@ -265,7 +266,6 @@ namespace Emulators
                             // XOR the pixel
                             state -> VRAM[pos] ^= 1;
                         }
-                
                 break;
             
             // Input handling
