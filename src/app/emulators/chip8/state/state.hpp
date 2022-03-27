@@ -13,7 +13,8 @@ namespace Emulators
         enum CHIP8Specs
         {
             CHIP8 = 1 << 0,
-            SCHIP8 = 1 << 1
+            SCHIP8 = 1 << 1,
+            HIRES = 1 << 2
         };
 
         class CHIP8State

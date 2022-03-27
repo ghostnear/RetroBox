@@ -1,5 +1,6 @@
 #include "interpreter.hpp"
 
+#define D_OFF ((OOON != 0) ? 1 : 2)
 #define OOON  (opcode & 0x000F)
 #define OONO ((opcode & 0x00F0) >> 4)
 #define OONN  (opcode & 0x00FF)
@@ -12,6 +13,9 @@
 #define  VX  (state -> V[ONOO])
 #define  VPC (state -> PC)
 #define  VI  (state -> I)
+
+#define unknown_opcode() \
+    addToLog("Unknown opcode detected! " + Core::Utils::convertToHex(opcode, 4));
 
 #define clean() \
     memset(state -> VRAM, 0, state -> screen_h * state -> screen_w);
@@ -96,7 +100,7 @@ namespace Emulators
                             memset(state -> VRAM, 0, OOON * state -> screen_w);
                             break;
                         default:
-                            goto opcode_unknown;
+                            unknown_opcode();
                             break;
                         }
                         break;
@@ -138,7 +142,7 @@ namespace Emulators
                     break;
 
                 default:
-                    goto opcode_unknown;
+                    unknown_opcode();
                     break;
                 }
                 break;
@@ -208,7 +212,7 @@ namespace Emulators
                     break;
 
                 default:
-                    goto opcode_unknown;
+                    unknown_opcode();
                     break;
                 }
                 break;
@@ -223,7 +227,7 @@ namespace Emulators
                     break;
 
                 default:
-                    goto opcode_unknown;
+                    unknown_opcode();
                     break;
                 }
                 break;
@@ -246,50 +250,21 @@ namespace Emulators
             // DRW VX, VY, N
             case 0xD:
                 VF = 0;
-                if(OOON != 0)
-                {
-                    for(auto i = 0; i < OOON; i++)
-                    {
-                        for(auto j = 0; j < 8; j++)
+                for(auto i = 0; i < ((OOON != 0) ? OOON : 0x10); i++)
+                    for(auto j = 0; j < ((OOON != 0) ? 0x8 : 0x10); j++)
+                        // Check if bit is set in sprite
+                        if(((j < 8 && state -> RAM[VI + D_OFF * i] & (1 << (7 - j))) || (j >= 8 && state -> RAM[VI + D_OFF * i + 1] & (1 << (0xF - j)))))
                         {
-                            // Check if bit is set in sprite
-                            if(state -> RAM[VI + i] & (1 << (7 - j)))
-                            {
-                                // Pixel pos
-                                uint32_t pos = (VY + i) * state -> screen_w + VX + j;
-                                pos %= state -> screen_w * state -> screen_h;
+                            // Pixel pos
+                            uint32_t pos = (VY + i) * state -> screen_w + VX + j;
+                            pos %= state -> screen_w * state -> screen_h;
 
-                                // Collision flag
-                                VF = ((state -> VRAM[pos] == 1) ? 1 : VF);
+                            // Collision flag
+                            VF = ((state -> VRAM[pos] == 1) ? 1 : VF);
 
-                                // XOR the pixel
-                                state -> VRAM[pos] ^= 1;
-                            }
+                            // XOR the pixel
+                            state -> VRAM[pos] ^= 1;
                         }
-                    }
-                }
-                else
-                {
-                    for(auto i = 0; i < 0x10; i++)
-                    {
-                        for(auto j = 0; j < 0x10; j++)
-                        {
-                            // Check if bit is set in sprite
-                            if((j < 8 && state -> RAM[VI + 2 * i] & (1 << (7 - j))) || (j >= 8 && state -> RAM[VI + 2 * i + 1] & (1 << (0xF - j))))
-                            {
-                                // Pixel pos
-                                uint32_t pos = (VY + i) * state -> screen_w + VX + j;
-                                pos %= state -> screen_w * state -> screen_h;
-
-                                // Collision flag
-                                VF = ((state -> VRAM[pos] == 1) ? 1 : VF);
-
-                                // XOR the pixel
-                                state -> VRAM[pos] ^= 1;
-                            }
-                        }
-                    }
-                }
                 
                 break;
             
@@ -308,7 +283,7 @@ namespace Emulators
                     break;
 
                 default:
-                    goto opcode_unknown;
+                    unknown_opcode();
                     break;
                 }
                 break;
@@ -375,20 +350,15 @@ namespace Emulators
                     break;
 
                 default:
-                    goto opcode_unknown;
+                    unknown_opcode();
                     break;
                 }
                 break;
 
             default:
-                goto opcode_unknown;
+                unknown_opcode();
                 break;
             }
-
-            return;
-            
-            opcode_unknown:
-                addToLog("Unknown opcode detected! " + Core::Utils::convertToHex(opcode, 4));
         }
 
         void CHIP8Interpreter::update(double dt)
