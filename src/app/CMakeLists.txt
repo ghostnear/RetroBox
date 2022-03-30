@@ -11,8 +11,9 @@ main.cpp)
 # endif()
 
 add_subdirectory(core)
+add_subdirectory(states)
 add_subdirectory(emulators)
 
-target_link_libraries(emulator PUBLIC core emulators)
+target_link_libraries(emulator PUBLIC core emulators states)
 set_target_properties(emulator PROPERTIES
   OUTPUT_NAME Owari)

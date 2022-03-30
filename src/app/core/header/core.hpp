@@ -3,6 +3,7 @@
 
 #include <sstream>
 #include <iomanip>
+#include "appdata.hpp"
 #include <../timer/timer.hpp>
 #include <../window/window.hpp>
 #include <../states/statemanager.hpp>

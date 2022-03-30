@@ -7,7 +7,7 @@ namespace Emulators
 {
     void CHIP8::init()
     {
-        parent -> getWindow() -> setWindowTitle("Owari | CHIP8");
+        parent -> getWindow() -> setWindowTitle(APP_NAME + " | CHIP8");
         state = new CHIP8State();
         cpu = new CHIP8Interpreter();
         cpu -> attachState(state);

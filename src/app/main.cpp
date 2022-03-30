@@ -1,8 +1,6 @@
-// General app data
-#include "appdata.hpp"
-
 // Libraries
 #include <core.hpp>
+#include <states.hpp>
 #include <emulators.hpp>
 
 using namespace Core;
@@ -15,7 +13,7 @@ int main(int argc, char* argv[])
 
     // Check main app modes
     if(args.getVersionMode())
-        printf("%s\n", OWARI_VERSION.c_str());
+        printf("%s\n", APP_VERSION.c_str());
     else if(!args.getHelpMode())
     {
         // System variables
@@ -28,6 +26,11 @@ int main(int argc, char* argv[])
             auto initState = new Emulators::CHIP8();
             stateManager.pushState((State*) initState);
             initState -> loadROM(args.getPath());
+        }
+        else
+        {
+            auto initState = new States::Boot();
+            stateManager.pushState((State*) initState);
         }
 
         // Main app loop

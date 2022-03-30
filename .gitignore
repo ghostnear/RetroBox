@@ -2,6 +2,10 @@
 bin/
 build/
 
+# Ignore local scripts
+clean.bat
+run-win.bat
+
 # Ignore SDL files, should be provided by the user
 src/external/sdl
 
