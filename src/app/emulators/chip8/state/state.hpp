@@ -22,8 +22,7 @@ namespace Emulators
         private:
             // CPU instruction specs
             int32_t enabledSpecs = 1;
-            bool threaded = false;
-
+        
         public:
             // Registers
             uint8_t V[0x10], delta_timer, sound_timer;
@@ -31,6 +30,7 @@ namespace Emulators
             char keyBind[0x10] = { 'x', '1', '2', '3', 'q', 'w', 'e', 'a', 's', 'd', 'z', 'c', '4', 'r', 'f', 'v'};
             uint16_t PC, I;
             int32_t speed = 500;
+            bool threaded = true;
             bool supermode = false, draw_flag = false;
 
             // Mount point
@@ -53,7 +53,7 @@ namespace Emulators
             MemoryEditor mem_edit;
 
             // If the emulator is running
-            bool running = true;
+            bool running = false;
 
             // Constructor
             CHIP8State();

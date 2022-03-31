@@ -65,6 +65,7 @@ namespace Emulators
                 delete VRAM;
             VRAM = new uint8_t[screen_w * screen_h];
             memset(VRAM, 0, screen_h * screen_w);
+            running = false;
         }
 
         void CHIP8State::disableSpec(CHIP8Specs spec)

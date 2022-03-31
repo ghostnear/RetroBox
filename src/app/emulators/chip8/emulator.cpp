@@ -79,13 +79,13 @@ namespace Emulators
                     {
                         ImGui::TableNextColumn();
                         if(ImGui::Button("Stop"))
-                            state -> running = false;
+                            cpu -> stop();
                     }
                     else
                     {
                         ImGui::TableNextColumn();
                         if(ImGui::Button("Start"))
-                            state -> running = true;
+                            cpu -> start();
                         ImGui::TableNextColumn();
                         if(ImGui::Button("Step"))
                             cpu -> step();        
@@ -124,7 +124,7 @@ namespace Emulators
                 Core::show_error_window(output.c_str(), parent -> getWindow() -> getSDL());
             }
             else
-                fin.read(reinterpret_cast<char*>(state -> RAM + state -> mountPoint), size);
+                fin.read(reinterpret_cast<char*>(state -> RAM + state -> mountPoint), size), cpu -> start();
         }
         fin.close();
     }

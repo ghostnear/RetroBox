@@ -201,13 +201,13 @@ namespace Emulators
 
                 // SUBN VX, VY
                 case 0x7:
-                    VF = VX > VY;
+                    VF = VY > VX;
                     VX = VY - VX;
                     break;
 
                 // SHL VX, VY
                 case 0xE:
-                    VF = ((VX & (1 << 8)) != 0);
+                    VF = ((VX & (1 << 7)) != 0);
                     VX <<= 1;
                     break;
 
@@ -361,7 +361,7 @@ namespace Emulators
             }
         }
 
-        void CHIP8Interpreter::update(double dt)
+        void CHIP8Interpreter::tick(double dt)
         {
             if(state -> running)
             {
@@ -381,6 +381,64 @@ namespace Emulators
                 }
             }
             else timer = timer_60hz = 0;
+        }
+
+        void CHIP8Interpreter::start()
+        {
+            state -> running = true;
+            if(run_thread == nullptr)
+            {
+                run_thread = new std::thread([this] {
+                    while(state -> running)
+                    {
+                        tick(1.0 / state -> speed);
+                        std::this_thread::sleep_for(std::chrono::microseconds(1000000 / state -> speed));
+                    }
+                });
+            }
+            if(state -> threaded && !run_thread -> joinable())
+                run_thread -> detach();
+        }
+
+        void CHIP8Interpreter::stop()
+        {
+            if(run_thread == nullptr)
+            {
+                run_thread = new std::thread([this] {
+                    while(state -> running)
+                    {
+                        tick(1.0 / state -> speed);
+                        std::this_thread::sleep_for(std::chrono::microseconds(1000000 / state -> speed));
+                    }
+                });
+            }
+            state -> running = false;
+            if(state -> threaded && run_thread -> joinable())
+                run_thread -> join();
+        }
+
+        void CHIP8Interpreter::update(double dt)
+        {
+            if(!state -> threaded)
+                tick(dt);
+            else if(state -> threaded)
+            {
+                if(run_thread == nullptr)
+                {
+                    run_thread = new std::thread([this] {
+                        while(state -> running)
+                        {
+                            tick(1.0 / state -> speed);
+                            std::this_thread::sleep_for(std::chrono::microseconds(1000000 / state -> speed));
+                        }
+                    });
+                }
+                // If not running, make sure to run if the state is supposed to run
+                if(!run_thread -> joinable() && state -> running)
+                    run_thread -> detach();
+                else if(run_thread -> joinable() && !state -> running)
+                    run_thread -> join();
+            }
         }
     };
 }
