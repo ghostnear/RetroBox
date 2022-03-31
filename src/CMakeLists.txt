@@ -6,3 +6,5 @@ set(CMAKE_RUNTIME_OUTPUT_DIRECTORY bin/)
 
 add_subdirectory(external)
 add_subdirectory(app)
+
+install(TARGETS emulator DESTINATION bin)
