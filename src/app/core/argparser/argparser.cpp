@@ -6,8 +6,8 @@ namespace Core
     {
         // Auxiliary variables
         static const char *const usages[] = {
-            "Owari [options] [[--] args]",
-            "Owari [options]",
+            "RetroBox [options] [[--] args]",
+            "RetroBox [options]",
             NULL,
         };
         const char *type = NULL;

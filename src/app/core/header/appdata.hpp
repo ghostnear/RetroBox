@@ -1,7 +1,7 @@
 #ifndef APPDATA_HPP
 #define APPDATA_HPP
 
-#define APP_NAME            std::string("Owari")
+#define APP_NAME            std::string("RetroBox")
 #define APP_VERSION_MAJOR   std::string("0")
 #define APP_VERSION_MINOR   std::string("0")
 #define APP_VERSION_PATCH   std::string("1")
