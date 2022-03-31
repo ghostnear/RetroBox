@@ -66,7 +66,30 @@ namespace Core
 
         void Window::toggleFullscreen()
         {
-            SDL_SetWindowFullscreen(winPtr, !(SDL_GetWindowFlags(winPtr) & SDL_WINDOW_FULLSCREEN));
+            fullscreen = !fullscreen;
+            SDL_SetWindowFullscreen(winPtr, !fullscreen);
+        }
+
+        void Window::toggleFullscreenBorderless()
+        {
+            if(!fullscreen)
+            {
+                lastFullscreen.first = ImGui::GetIO().DisplaySize.x;
+                lastFullscreen.second = ImGui::GetIO().DisplaySize.y;
+                SDL_SetWindowPosition(winPtr, 0, 0);
+
+                // Get screen sizes
+                SDL_DisplayMode DM;
+                SDL_GetCurrentDisplayMode(0, &DM);
+                SDL_SetWindowSize(winPtr, DM.w, DM.h);
+            }
+            else
+            {
+                SDL_SetWindowPosition(winPtr, SDL_WINDOWPOS_CENTERED, SDL_WINDOWPOS_CENTERED);
+                SDL_SetWindowSize(winPtr, lastFullscreen.first, lastFullscreen.second);                
+            }
+
+            fullscreen = !fullscreen;
         }
 
         void Window::setWindowTitle(std::string name)
@@ -100,8 +123,8 @@ namespace Core
 
             // Check for special window keybinds
             // TODO: make an input bind system
-            if(inputHandler.getKey((char)SDLK_F11))
-                toggleFullscreen();
+            if(inputHandler.getKeyPressed((char)SDLK_F11))
+                toggleFullscreenBorderless();
         }
 
         Core::Input* Window::getInput()

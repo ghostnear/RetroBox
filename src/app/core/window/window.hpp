@@ -26,6 +26,8 @@ namespace Core
             SDL_Event* event;
             SDL_Window* winPtr;
             Renderer* renderer;
+            std::pair<int, int> lastFullscreen;
+            bool fullscreen = false;
             Core::Input inputHandler;
             ImVec4 clear_color = ImVec4(0.0, 0.0, 0.0, 1.00);
             ImGuiIO io;
@@ -39,6 +41,9 @@ namespace Core
 
             // Toggles fullscreen
             void toggleFullscreen();
+
+            // Toggles fullscreen (non-exclusive)
+            void toggleFullscreenBorderless();
 
             // Sets the window title
             void setWindowTitle(std::string name);
