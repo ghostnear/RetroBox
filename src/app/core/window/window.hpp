@@ -37,6 +37,9 @@ namespace Core
             // Destructor
             ~Window();
 
+            // Toggles fullscreen
+            void toggleFullscreen();
+
             // Sets the window title
             void setWindowTitle(std::string name);
 

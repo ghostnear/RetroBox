@@ -386,44 +386,20 @@ namespace Emulators
         void CHIP8Interpreter::start()
         {
             state -> running = true;
-            if(run_thread == nullptr)
-            {
-                run_thread = new std::thread([this] {
-                    while(state -> running)
-                    {
-                        tick(1.0 / state -> speed);
-                        std::this_thread::sleep_for(std::chrono::microseconds(1000000 / state -> speed));
-                    }
-                });
-            }
-            if(state -> threaded && !run_thread -> joinable())
-                run_thread -> detach();
         }
 
         void CHIP8Interpreter::stop()
         {
-            if(run_thread == nullptr)
-            {
-                run_thread = new std::thread([this] {
-                    while(state -> running)
-                    {
-                        tick(1.0 / state -> speed);
-                        std::this_thread::sleep_for(std::chrono::microseconds(1000000 / state -> speed));
-                    }
-                });
-            }
             state -> running = false;
-            if(state -> threaded && run_thread -> joinable())
-                run_thread -> join();
         }
 
         void CHIP8Interpreter::update(double dt)
         {
-            if(!state -> threaded)
+            if(!state -> threaded && state -> running)
                 tick(dt);
             else if(state -> threaded)
             {
-                if(run_thread == nullptr)
+                if(run_thread == nullptr && state -> running)
                 {
                     run_thread = new std::thread([this] {
                         while(state -> running)
@@ -433,11 +409,10 @@ namespace Emulators
                         }
                     });
                 }
-                // If not running, make sure to run if the state is supposed to run
-                if(!run_thread -> joinable() && state -> running)
-                    run_thread -> detach();
-                else if(run_thread -> joinable() && !state -> running)
-                    run_thread -> join();
+
+                if(run_thread != nullptr && !state -> running)
+                    if(run_thread -> joinable())
+                        run_thread -> join(), run_thread = nullptr;
             }
         }
     };

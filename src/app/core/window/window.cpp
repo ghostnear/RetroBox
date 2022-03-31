@@ -64,6 +64,11 @@ namespace Core
             quit = true;
         }
 
+        void Window::toggleFullscreen()
+        {
+            SDL_SetWindowFullscreen(winPtr, !(SDL_GetWindowFlags(winPtr) & SDL_WINDOW_FULLSCREEN));
+        }
+
         void Window::setWindowTitle(std::string name)
         {
             if(name != "")
@@ -92,6 +97,11 @@ namespace Core
                     break;
                 }
             }
+
+            // Check for special window keybinds
+            // TODO: make an input bind system
+            if(inputHandler.getKey((char)SDLK_F11))
+                toggleFullscreen();
         }
 
         Core::Input* Window::getInput()
