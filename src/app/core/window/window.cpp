@@ -43,6 +43,9 @@ namespace Core
             ImGui::StyleColorsDark();
             ImGui_ImplSDL2_InitForSDLRenderer(winPtr, renderer -> getSDL());
             ImGui_ImplSDLRenderer_Init(renderer -> getSDL());
+
+            // Disable ImGUI ini file
+            ImGui::GetIO().IniFilename = nullptr;
         }
 
         Window::~Window()
