@@ -79,6 +79,7 @@ namespace Core
             {
                 lastFullscreen.first = ImGui::GetIO().DisplaySize.x;
                 lastFullscreen.second = ImGui::GetIO().DisplaySize.y;
+                SDL_GetWindowPosition(winPtr, &lastPos.first, &lastPos.second);
                 SDL_SetWindowPosition(winPtr, 0, 0);
 
                 // Get screen sizes
@@ -88,7 +89,7 @@ namespace Core
             }
             else
             {
-                SDL_SetWindowPosition(winPtr, SDL_WINDOWPOS_CENTERED, SDL_WINDOWPOS_CENTERED);
+                SDL_SetWindowPosition(winPtr, lastPos.first, lastPos.second);
                 SDL_SetWindowSize(winPtr, lastFullscreen.first, lastFullscreen.second);                
             }
 

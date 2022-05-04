@@ -26,7 +26,7 @@ namespace Core
             SDL_Event* event;
             SDL_Window* winPtr;
             Renderer* renderer;
-            std::pair<int, int> lastFullscreen;
+            std::pair<int, int> lastFullscreen, lastPos;
             bool fullscreen = false;
             Core::Input inputHandler;
             ImVec4 clear_color = ImVec4(0.0, 0.0, 0.0, 1.00);

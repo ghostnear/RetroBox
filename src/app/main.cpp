@@ -27,6 +27,13 @@ int main(int argc, char* argv[])
             stateManager.pushState((State*) initState);
             initState -> loadROM(args.getPath());
         }
+        // BP mode
+        else if(args.getEmu() == "BYTEPUSHER")
+        {
+            auto initState = new Emulators::BytePusher();
+            stateManager.pushState((State*) initState);
+            initState -> loadROM(args.getPath());
+        }
         else
         {
             auto initState = new States::Boot();
